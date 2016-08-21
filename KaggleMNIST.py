@@ -5,14 +5,14 @@ from keras.optimizers import SGD
 import csv
 import numpy as np
 
-yTrain = np.ones((1,42000))
-xTrain = np.ones((42000,28,28))
-counter = 0
-skip = True
 # input image dimensions
 img_rows, img_cols = 28, 28
 # the MNIST images are black and white
 img_channels = 1
+yTrain = np.ones((1,42000))
+xTrain = np.ones((42000,img_cols,img_rows))
+counter = 0
+skip = True
 
 file = open('train.csv')
 csv_file = csv.reader(file)
@@ -28,6 +28,7 @@ for row in csv_file:
 	xTrain[counter,:,:] = temp
 	counter = counter + 1
 print yTrain
+print xTrain.shape
 
 
 #model = Sequential()
