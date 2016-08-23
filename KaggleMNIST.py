@@ -57,9 +57,7 @@ model = Sequential()
 model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(img_channels,img_rows, img_cols)))
 
 model.add(Activation('relu'))
-model.add(MaxPooling2D(pool_size=(2, 2)))
-model.add(Convolution2D(64, 2, 2, border_mode='valid'))
-model.add(Dropout(0.05))
+model.add(Convolution2D(32, 2, 2, border_mode='valid'))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Convolution2D(192, 3, 3, border_mode='valid'))
@@ -67,25 +65,24 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Activation('relu'))
 #model.add(Convolution2D(256, 3, 3, border_mode='valid'))
 #model.add(Activation('relu'))
-model.add(Dropout(0.15))
 model.add(Flatten())
 model.add(Dense(128))
-model.add(Activation('relu'))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 #Optimizers and Testing
-sgd = SGD(lr=0.2, decay=1e-6, momentum=0.9, nesterov=True)
+sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
 model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.fit(xTrain, yTrain, batch_size=32, nb_epoch=1,validation_data=(xTest, yTest),shuffle=True)
+model.fit(xTrain, yTrain, batch_size=32, nb_epoch=8,validation_data=(xTest, yTest),shuffle=True)
 
 #Saving predictions into a test file that can be uploaded to Kaggle
 #NOTE: You have to add a header row before submitting the txt file
 results = np.zeros((28000,2))
 for num in range(1,28001):	
 	results[num - 1,0] = num
-temp = model.predict_classes(self, xTest, batch_size=32, verbose=1)
+temp = model.predict_classes( xTest, batch_size=32, verbose=1)
+print temp.shape
 #temp is a 
 for num in range(0,28000):	
 	results[num,1] = temp[num]
-np.savetxt('result.csv', results, delimiter=',',format='%.3e')  
+np.savetxt('result.csv', results, delimiter=',')  
