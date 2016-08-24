@@ -57,7 +57,7 @@ model = Sequential()
 model.add(Convolution2D(32, 3, 3, border_mode='valid', input_shape=(img_channels,img_rows, img_cols)))
 
 model.add(Activation('relu'))
-model.add(Convolution2D(32, 2, 2, border_mode='valid'))
+model.add(Convolution2D(32, 3, 3, border_mode='valid'))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Convolution2D(192, 3, 3, border_mode='valid'))
@@ -67,13 +67,13 @@ model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Activation('relu'))
 model.add(Flatten())
 model.add(Dense(128))
+model.add(Activation('relu'))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 #Optimizers and Testing
-sgd = SGD(lr=0.1, decay=1e-6, momentum=0.9, nesterov=True)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
-model.fit(xTrain, yTrain, batch_size=32, nb_epoch=8,validation_data=(xTest, yTest),shuffle=True)
+model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
+model.fit(xTrain, yTrain, batch_size=32, nb_epoch=4,validation_data=(xTest, yTest),shuffle=True)
 
 #Saving predictions into a test file that can be uploaded to Kaggle
 #NOTE: You have to add a header row before submitting the txt file
