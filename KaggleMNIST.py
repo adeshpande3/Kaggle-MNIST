@@ -61,19 +61,20 @@ model.add(Convolution2D(32, 3, 3, border_mode='valid'))
 model.add(Activation('relu'))
 model.add(MaxPooling2D(pool_size=(2, 2)))
 #model.add(Convolution2D(192, 3, 3, border_mode='valid'))
-#model.add(Dropout(0.10))
+model.add(Dropout(0.10))
 #model.add(Activation('relu'))
 #model.add(Convolution2D(256, 3, 3, border_mode='valid'))
 #model.add(Activation('relu'))
 model.add(Flatten())
 model.add(Dense(128))
 model.add(Activation('relu'))
+model.add(Dropout(0.25))
 model.add(Dense(num_classes))
 model.add(Activation('softmax'))
 
 #Optimizers and Testing
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
-model.fit(xTrain, yTrain, batch_size=32, nb_epoch=4,validation_data=(xTest, yTest),shuffle=True)
+model.fit(xTrain, yTrain, batch_size=32, nb_epoch=8,validation_data=(xTest, yTest),shuffle=True)
 
 #Saving predictions into a test file that can be uploaded to Kaggle
 #NOTE: You have to add a header row before submitting the txt file
@@ -85,4 +86,4 @@ print temp.shape
 #temp is a 
 for num in range(0,28000):	
 	results[num,1] = temp[num]
-np.savetxt('result.csv', results, delimiter=',')  
+np.savetxt('result.txt', results, delimiter=',', fmt = '%i')  
