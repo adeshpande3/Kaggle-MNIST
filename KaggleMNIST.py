@@ -105,4 +105,5 @@ for num in range(1,num_testImages + 1):
 temp = model.predict_classes( xTest, batch_size=32, verbose=1)
 for num in range(0,num_testImages):	
 	results[num,1] = temp[num]
+# Results saved in this text file
 np.savetxt('result.csv', results, delimiter=',', fmt = '%i')  
