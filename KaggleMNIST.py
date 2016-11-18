@@ -20,6 +20,7 @@ from keras.optimizers import SGD
 from keras.utils import np_utils
 import csv
 import numpy as np
+import sys
 
 # VARIABLES
 img_rows, img_cols = 28, 28
@@ -48,6 +49,7 @@ for row in csv_file:
 	temp = np.ones((1,num_pixels))
 	for num in range(1,num_pixels):
 		temp[0,num - 1] = row[num]
+	temp = (temp - np.mean(temp))/(np.max(temp) - np.min(temp))
 	temp = np.reshape(temp, (img_rows,img_cols))
 	xTrain[counter,0,:,:] = temp
 	counter = counter + 1
@@ -68,6 +70,7 @@ for row in csv_file2:
 	temp = np.ones((1,num_pixels))
 	for num in range(1,num_pixels):
 		temp[0,num - 1] = row[num]
+	temp = (temp - np.mean(temp))/(np.max(temp) - np.min(temp))
 	temp = np.reshape(temp, (img_rows,img_cols))
 	xTest[counter2,0,:,:] = temp
 	counter2 = counter2 + 1
@@ -97,8 +100,6 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='adadelta', metrics=['accuracy'])
 model.fit(xTrain, yTrain, batch_size=32, nb_epoch=8,validation_data=(xTest, yTest),shuffle=True)
 
-#Saving predictions into a test file that can be uploaded to Kaggle
-#NOTE: You have to add a header row before submitting the txt file
 results = np.zeros((num_testImages,2))
 for num in range(1,num_testImages + 1):	
 	results[num - 1,0] = num
@@ -109,3 +110,11 @@ for num in range(0,num_testImages):
 	results[num,1] = temp[num]
 # Results saved in this text file
 np.savetxt('result.csv', results, delimiter=',', fmt = '%i')  
+results = pd.np.array(results)
+firstRow = [[0 for x in range(2)] for x in range(1)]
+firstRow[0][0] = 'ImageId'
+firstRow[0][1] = 'Label'
+with open("result.csv", "wb") as f:
+    writer = csv.writer(f)
+    writer.writerows(firstRow)
+    writer.writerows(results)
